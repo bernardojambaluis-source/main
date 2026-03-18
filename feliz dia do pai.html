@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Dia do Pai 💙</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        .envelope {
+            font-size: 60px;
+            cursor: pointer;
+            border: 5px solid white;
+            width: 200px;
+            height: 130px;
+            border-radius: 15px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .envelope:hover {
+            transform: scale(1.08);
+        }
+
+        .card {
+            display: none;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .card img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            margin-top: -80px;
+            border: 5px solid white;
+            object-fit: cover;
+        }
+
+        h3 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 28px;
+            color: #0077b6;
+            margin: 15px 0;
+        }
+
+        p {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+            min-height: 120px;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            background: #0077b6;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #005f8a;
+            transform: scale(1.08);
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(0, 119, 182, 0.4);
+            animation: float 6s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-200px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ENVELOPE -->
+    <div id="envelope" class="envelope" onclick="abrirCarta()">
+        💙
+    </div>
+
+    <!-- CARTA -->
+    <div class="card" id="card">
+        <img src="https://github.com/bernardojambaluis-source/p/blob/main/pppp.png?raw=true" alt="Pai">
+
+        <h3>Feliz Dia do Pai 💙</h3>
+
+        <p id="texto"></p>
+
+        <button class="btn" onclick="tocarMusica()">🎵 Ouvir mensagem</button>
+
+        <audio id="musica"
+            src="https://raw.githubusercontent.com/bernardojambaluis-source/p/refs/heads/main/Matias%20Dam%C3%A1sio%20-%20papa.mp3"></audio>
+    </div>
+
+    <script>
+        const mensagem = `Papá
+
+Hoje é o teu dia, mas eu sinto que devia agradecer-te todos os dias.
+
+Nem sempre digo, mas vejo tudo… o teu esforço, a tua força e a forma como sempre estiveste presente, mesmo quando não era fácil. Levo muito de ti comigo, no jeito de ser e na forma de enfrentar a vida.
+
+Obrigado por seres esse homem de verdade, com um coração grande e silencioso, mas cheio de amor.
+
+Feliz Dia do Pai, Papá. ❤️
+`;
+
+        function abrirCarta() {
+            document.getElementById("envelope").style.display = "none";
+            document.getElementById("card").style.display = "block";
+            escreverTexto();
+        }
+
+        function escreverTexto() {
+            let i = 0;
+            const velocidade = 60;
+            const textoElemento = document.getElementById("texto");
+
+            function escrever() {
+                if (i < mensagem.length) {
+                    textoElemento.innerHTML += mensagem.charAt(i) === "\n" ? "<br>" : mensagem.charAt(i);
+                    i++;
+                    setTimeout(escrever, velocidade);
+                }
+            }
+
+            escrever();
+        }
+
+        function tocarMusica() {
+            let musica = document.getElementById("musica");
+            musica.currentTime = 13; // começa aos 15 segundos
+            musica.play();
+        }
+
+        setInterval(() => {
+            let heart = document.createElement("div");
+            heart.className = "heart";
+            heart.innerHTML = "💙";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }, 500);
+    </script>
+
+</body>
+
+</html>
