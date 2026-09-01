@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Museu das Coisas Bonitas</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    background:
+        radial-gradient(circle at 20% 10%, #302445 0, transparent 30%),
+        radial-gradient(circle at 80% 80%, #1e3a45 0, transparent 30%),
+        #09080d;
+    color: #f7f1e8;
+    min-height: 100vh;
+}
+
+/* CABEÇALHO */
+
+header {
+    min-height: 55vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+    animation: pulse 6s infinite ease-in-out;
+}
+
+.mini {
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    opacity: .65;
+    margin-bottom: 25px;
+}
+
+h1 {
+    font-size: clamp(48px, 9vw, 100px);
+    font-weight: normal;
+    line-height: .9;
+    position: relative;
+    z-index: 2;
+}
+
+h1 span {
+    display: block;
+    font-style: italic;
+    opacity: .75;
+}
+
+.subtitulo {
+    max-width: 600px;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    opacity: .7;
+}
+
+/* CONTROLES */
+
+.controles {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+input[type="text"] {
+    flex: 1;
+    min-width: 220px;
+    padding: 14px 18px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 30px;
+    background: rgba(255,255,255,.05);
+    color: white;
+    outline: none;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+button {
+    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(255,255,255,.07);
+    color: white;
+    padding: 13px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+button:hover {
+    background: white;
+    color: #111;
+}
+
+/* GALERIA */
+
+.galeria {
+    max-width: 1100px;
+    margin: 50px auto 100px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 35px;
+}
+
+.obra {
+    position: relative;
+    cursor: pointer;
+    animation: aparecer .8s ease both;
+}
+
+.imagem {
+    width: 100%;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #15131b;
+    border-radius: 5px;
+    position: relative;
+}
+
+.imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .7s cubic-bezier(.2,.8,.2,1);
+}
+
+.obra:hover img {
+    transform: scale(1.07);
+}
+
+.numero {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,.6);
+    padding: 6px 10px;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.info {
+    padding: 16px 3px;
+}
+
+.info h2 {
+    font-size: 22px;
+    font-weight: normal;
+}
+
+.info p {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    opacity: .5;
+    margin-top: 7px;
+}
+
+/* ESTADO VAZIO */
+
+.vazio {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 100px 20px;
+    border: 1px dashed rgba(255,255,255,.15);
+    border-radius: 10px;
+}
+
+.vazio h2 {
+    font-weight: normal;
+    font-size: 30px;
+}
+
+.vazio p {
+    margin-top: 15px;
+    opacity: .55;
+    font-family: Arial, sans-serif;
+}
+
+/* MODAL */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.9);
+    backdrop-filter: blur(15px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 25px;
+}
+
+.modal.ativo {
+    display: flex;
+}
+
+.modal-conteudo {
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: center;
+}
+
+.modal img {
+    width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+}
+
+.modal-info {
+    padding: 20px;
+}
+
+.modal-info small {
+    font-family: Arial, sans-serif;
+    letter-spacing: 3px;
+    opacity: .5;
+}
+
+.modal-info h2 {
+    font-size: 45px;
+    font-weight: normal;
+    margin: 20px 0;
+}
+
+.modal-info p {
+    font-family: Arial, sans-serif;
+    line-height: 1.8;
+    opacity: .65;
+}
+
+.fechar {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    font-size: 25px;
+    border: none;
+    background: none;
+}
+
+/* RODAPÉ */
+
+footer {
+    border-top: 1px solid rgba(255,255,255,.08);
+    text-align: center;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    opacity: .45;
+}
+
+/* ANIMAÇÕES */
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%,100% {
+        transform: scale(.8);
+        opacity: .3;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: .7;
+    }
+}
+
+
+/* EXPERIÊNCIA PREMIUM */
+.obra { transition: transform .4s ease, opacity .4s ease; }
+.obra:hover { transform: translateY(-8px); }
+.imagem::after { content:""; position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.38),transparent 45%); pointer-events:none; }
+.imagem { box-shadow: 0 18px 45px rgba(0,0,0,.25); }
+.modal-info { border-left:1px solid rgba(255,255,255,.1); }
+.modal-acoes { display:flex; gap:10px; margin-top:28px; flex-wrap:wrap; }
+.modal-acoes button { font-size:11px; letter-spacing:1px; }
+.favorita { background:rgba(255,255,255,.12); }
+.navegacao { display:flex; justify-content:space-between; margin-top:18px; gap:10px; }
+.navegacao button { flex:1; }
+.detalhes { margin-top:22px; padding-top:18px; border-top:1px solid rgba(255,255,255,.1); font-family:Arial,sans-serif; font-size:11px; opacity:.55; line-height:2; }
+@media(max-width:700px){ .modal-info{border-left:none;border-top:1px solid rgba(255,255,255,.1)} }
+
+/* MOBILE */
+
+@media(max-width: 700px) {
+
+    .modal-conteudo {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
+
+    .modal img {
+        max-height: 55vh;
+    }
+
+    .modal-info h2 {
+        font-size: 32px;
+    }
+
+    header {
+        min-height: 50vh;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="mini">Arquivo nº 001 · Coleção privada</div>
+
+    <h1>
+        Museu
+        <span>das Coisas Bonitas</span>
+    </h1>
+
+    <p class="subtitulo">
+        Um pequeno espaço dedicado àquilo que merece ser apreciado
+        com calma. Cada fotografia é uma história. Cada pessoa,
+        uma obra única.
+    </p>
+
+</header>
+
+
+<section class="controles">
+
+    <input
+        type="text"
+        id="pesquisa"
+        placeholder="Pesquisar uma obra..."
+        oninput="pesquisar()"
+    >
+
+</section>
+
+
+<main class="galeria" id="galeria">
+    <div class="vazio">
+        <h2>A abrir o museu...</h2>
+        <p>Um momento.</p>
+    </div>
+</main>
+
+
+<footer>
+    Museu das Coisas Bonitas · Uma exposição feita com carinho.
+</footer>
+
+
+
+
+
+<div class="modal" id="modal">
+
+    <button class="fechar" onclick="fecharModal()">×</button>
+
+    <div class="modal-conteudo">
+
+        <img id="modalImagem" src="">
+
+        <div class="modal-info">
+
+            <small id="modalCategoria"></small>
+
+            <h2 id="modalTitulo"></h2>
+
+            <p id="modalDescricao"></p>
+            <div class="detalhes">
+                <div id="modalData">ARQUIVO · COLEÇÃO PRIVADA</div>
+                <div id="modalPosicao">OBRA 001 DE 003</div>
+            </div>
+            <div class="modal-acoes">
+                <button class="favorita" id="btnFavorita" onclick="alternarFavorita()">♡ Guardar como favorita</button>
+            </div>
+            <div class="navegacao">
+                <button onclick="navegar(-1)">← Anterior</button>
+                <button onclick="navegar(1)">Próxima →</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+const API = "http://10.166.220.156:8000";
+let obras = [];
+let obraAtual = 0;
+let favoritas = JSON.parse(localStorage.getItem("museuFavoritas") || "[]");
+
+async function carregarObras(){
+    const galeria = document.getElementById("galeria");
+    try {
+        const resposta = await fetch(`${API}/api/obras`);
+        if(!resposta.ok) throw new Error();
+        const dados = await resposta.json();
+        obras = dados.obras || [];
+        mostrarObras(obras);
+    } catch(error) {
+        galeria.innerHTML = `<div class="vazio"><h2>O museu está temporariamente fechado.</h2><p>Não foi possível contactar o servidor.</p></div>`;
+    }
+}
+
+function mostrarObras(lista){
+    const galeria = document.getElementById("galeria");
+    galeria.innerHTML = "";
+    if(!lista.length){
+        galeria.innerHTML = `<div class="vazio"><h2>A coleção está vazia.</h2><p>Ainda não há obras para apresentar.</p></div>`;
+        return;
+    }
+    lista.forEach((obra,index)=>{
+        const elemento = document.createElement("article");
+        elemento.className = "obra";
+        elemento.innerHTML = `
+            <div class="imagem">
+                <span class="numero">${String(index+1).padStart(3,"0")}</span>
+                <img src="${API}${obra.imagem}" alt="${escapar(obra.titulo)}" loading="lazy">
+            </div>
+            <div class="info">
+                <h2>${escapar(obra.titulo)}</h2>
+                <p>${escapar(obra.categoria || "COLEÇÃO ESPECIAL")}</p>
+            </div>`;
+        elemento.addEventListener("click",()=>abrirModal(obra,index));
+        galeria.appendChild(elemento);
+    });
+}
+
+function pesquisar(){
+    const termo = document.getElementById("pesquisa").value.trim().toLowerCase();
+    if(!termo){ mostrarObras(obras); return; }
+    mostrarObras(obras.filter(obra =>
+        String(obra.titulo || "").toLowerCase().includes(termo) ||
+        String(obra.categoria || "").toLowerCase().includes(termo) ||
+        String(obra.descricao || "").toLowerCase().includes(termo)
+    ));
+}
+
+function abrirModal(obra,index){
+    obraAtual = index ?? 0;
+    document.getElementById("modalImagem").src = API + obra.imagem;
+    document.getElementById("modalImagem").alt = obra.titulo || "";
+    document.getElementById("modalTitulo").textContent = obra.titulo || "Sem título";
+    document.getElementById("modalCategoria").textContent = obra.categoria || "";
+    document.getElementById("modalDescricao").textContent = obra.descricao || "Uma obra especial do Museu das Coisas Bonitas.";
+    document.getElementById("modalData").textContent = "ARQUIVO · COLEÇÃO DO MUSEU";
+    atualizarPosicao();
+    atualizarBotaoFavorita();
+    document.getElementById("modal").classList.add("ativo");
+    document.body.style.overflow = "hidden";
+}
+
+function fecharModal(){
+    document.getElementById("modal").classList.remove("ativo");
+    document.body.style.overflow = "";
+}
+
+function navegar(direcao){
+    if(!obras.length) return;
+    obraAtual = (obraAtual + direcao + obras.length) % obras.length;
+    abrirModal(obras[obraAtual], obraAtual);
+}
+
+function atualizarPosicao(){
+    document.getElementById("modalPosicao").textContent = `OBRA ${String(obraAtual+1).padStart(3,"0")} DE ${String(obras.length).padStart(3,"0")}`;
+}
+
+function alternarFavorita(){
+    const nome = document.getElementById("modalTitulo").textContent;
+    favoritas = favoritas.includes(nome) ? favoritas.filter(x=>x!==nome) : [...favoritas,nome];
+    localStorage.setItem("museuFavoritas",JSON.stringify(favoritas));
+    atualizarBotaoFavorita();
+}
+
+function atualizarBotaoFavorita(){
+    const nome = document.getElementById("modalTitulo").textContent;
+    document.getElementById("btnFavorita").textContent = favoritas.includes(nome) ? "♥ Guardada nos favoritos" : "♡ Guardar como favorita";
+}
+
+document.getElementById("modal").addEventListener("click",e=>{
+    if(e.target === e.currentTarget) fecharModal();
+});
+
+document.addEventListener("keydown",e=>{
+    if(e.key === "Escape") fecharModal();
+    if(e.key === "ArrowLeft" && document.getElementById("modal").classList.contains("ativo")) navegar(-1);
+    if(e.key === "ArrowRight" && document.getElementById("modal").classList.contains("ativo")) navegar(1);
+});
+
+function escapar(texto){
+    return String(texto ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+carregarObras();
+</script>
+
+</body>
+</html>

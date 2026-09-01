@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Museu — Administração</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    min-height:100%;
+    font-family:Georgia,serif;
+    background:#09080d;
+    color:#f7f1e8;
+}
+
+body{
+    min-height:100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    padding:35px 7%;
+    border-bottom:1px solid #ffffff18;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.brand small{
+    font:10px Arial;
+    letter-spacing:3px;
+    opacity:.5;
+}
+
+.brand h1{
+    font-weight:normal;
+}
+
+.brand span{
+    font-style:italic;
+    opacity:.7;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main{
+    width:min(1100px,92%);
+    margin:45px auto;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    margin-bottom:30px;
+}
+
+.top h2{
+    font-size:40px;
+    font-weight:normal;
+    margin:0;
+}
+
+.top p{
+    font:11px Arial;
+    opacity:.5;
+}
+
+/* =========================
+   BOTÕES
+========================= */
+
+.btn{
+    border:1px solid #ffffff25;
+    background:#ffffff0d;
+    color:white;
+    padding:12px 18px;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    background:white;
+    color:#111;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(
+        auto-fill,
+        minmax(230px,1fr)
+    );
+    gap:28px;
+}
+
+.card{
+    background:#ffffff08;
+    border:1px solid #ffffff12;
+    border-radius:14px;
+    overflow:hidden;
+}
+
+.card img{
+    width:100%;
+    height:290px;
+    object-fit:cover;
+}
+
+.info{
+    padding:17px;
+}
+
+.info h3{
+    font-weight:normal;
+    font-size:22px;
+    margin:0;
+}
+
+.info p{
+    font:10px Arial;
+    letter-spacing:2px;
+    opacity:.45;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    margin-top:16px;
+}
+
+.actions button{
+    flex:1;
+    padding:10px;
+    border-radius:20px;
+    background:#ffffff0a;
+    color:white;
+    border:1px solid #ffffff18;
+    cursor:pointer;
+}
+
+.actions .del{
+    color:#ffaaaa;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.login{
+    position:fixed;
+    inset:0;
+    background:#000d;
+    backdrop-filter:blur(12px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:20;
+}
+
+.loginbox{
+    width:min(420px,100%);
+    background:#17131e;
+    border:1px solid #ffffff20;
+    border-radius:22px;
+    padding:35px;
+}
+
+.loginbox h1{
+    font-weight:normal;
+    font-size:36px;
+}
+
+.loginbox span{
+    display:block;
+    font-style:italic;
+    opacity:.7;
+}
+
+.loginbox label{
+    display:block;
+    font:10px Arial;
+    letter-spacing:2px;
+    opacity:.6;
+    margin:15px 0 7px;
+}
+
+.loginbox input{
+    width:100%;
+    padding:13px;
+    background:#ffffff0a;
+    color:white;
+    border:1px solid #ffffff20;
+    border-radius:9px;
+}
+
+.loginbox button{
+    width:100%;
+    margin-top:20px;
+}
+
+.err{
+    color:#ffaaaa;
+    font:11px Arial;
+    display:none;
+    margin-top:10px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:#000d;
+    backdrop-filter:blur(12px);
+    display:none;
+    overflow-y:auto;
+    padding:30px 20px;
+    z-index:20;
+    align-items:flex-start;
+    justify-content:center;
+}
+
+.modal.on{
+    display:flex;
+}
+
+.box{
+    width:min(600px,100%);
+    background:#17131e;
+    border:1px solid #ffffff20;
+    border-radius:20px;
+    padding:30px;
+    margin:auto 0;
+    max-height:calc(100vh - 60px);
+    overflow-y:auto;
+    scrollbar-width:thin;
+}
+
+.box::-webkit-scrollbar{
+    width:7px;
+}
+
+.box::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+.box::-webkit-scrollbar-thumb{
+    background:#ffffff25;
+    border-radius:10px;
+}
+
+.box::-webkit-scrollbar-thumb:hover{
+    background:#ffffff40;
+}
+
+.box h2{
+    font-weight:normal;
+    font-size:30px;
+    margin-top:0;
+}
+
+.box label{
+    display:block;
+    font:10px Arial;
+    letter-spacing:2px;
+    opacity:.6;
+    margin:15px 0 7px;
+}
+
+.box input,
+.box textarea{
+    width:100%;
+    padding:13px;
+    background:#ffffff0a;
+    color:white;
+    border:1px solid #ffffff20;
+    border-radius:9px;
+}
+
+.box input[type="file"]{
+    cursor:pointer;
+}
+
+.box textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.preview{
+    max-width:100%;
+    max-height:220px;
+    margin-top:12px;
+    display:none;
+    border-radius:10px;
+    object-fit:cover;
+}
+
+/* =========================
+   FORM ACTIONS
+========================= */
+
+.form-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+    position:sticky;
+    bottom:0;
+    background:#17131e;
+    padding-top:15px;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+    position:fixed;
+    bottom:25px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#f7f1e8;
+    color:#111;
+    padding:12px 20px;
+    border-radius:30px;
+    display:none;
+    font:12px Arial;
+    z-index:30;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:650px){
+
+    header,
+    .top{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:20px;
+    }
+
+    main{
+        margin:30px auto;
+    }
+
+    .top h2{
+        font-size:32px;
+    }
+
+    .modal{
+        padding:15px;
+    }
+
+    .box{
+        padding:22px;
+        max-height:calc(100vh - 30px);
+        border-radius:18px;
+    }
+
+    .form-actions{
+        flex-direction:column;
+    }
+
+    .form-actions .btn{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<section class="login" id="login">
+
+    <div class="loginbox">
+
+        <small>ÁREA RESTRITA · MUSEU</small>
+
+        <h1>
+            Administração
+            <span>das Coisas Bonitas</span>
+        </h1>
+
+        <form id="loginForm">
+
+            <label>UTILIZADOR</label>
+
+            <input
+                id="username"
+                type="text"
+                required
+                autocomplete="username"
+            >
+
+            <label>SENHA</label>
+
+            <input
+                id="password"
+                type="password"
+                required
+                autocomplete="current-password"
+            >
+
+            <div
+                class="err"
+                id="loginErr"
+            >
+                Utilizador ou senha inválidos.
+            </div>
+
+            <button
+                type="submit"
+                class="btn"
+            >
+                Entrar no museu →
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     APLICAÇÃO
+========================= -->
+
+<div
+    id="app"
+    style="display:none"
+>
+
+<header>
+
+    <div class="brand">
+
+        <small>
+            ARQUIVO PRIVADO · ADMINISTRAÇÃO
+        </small>
+
+        <h1>
+            Museu
+            <span>das Coisas Bonitas</span>
+        </h1>
+
+    </div>
+
+    <button
+        class="btn"
+        onclick="logout()"
+    >
+        Sair
+    </button>
+
+</header>
+
+
+<main>
+
+    <div class="top">
+
+        <div>
+
+            <h2>
+                A coleção
+            </h2>
+
+            <p id="count">
+                A carregar...
+            </p>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="newWork()"
+        >
+            + Adicionar fotografia
+        </button>
+
+    </div>
+
+    <section
+        class="grid"
+        id="grid"
+    ></section>
+
+</main>
+
+</div>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div
+    class="modal"
+    id="modal"
+>
+
+    <div class="box">
+
+        <h2 id="modalTitle">
+            Nova fotografia
+        </h2>
+
+        <form id="workForm">
+
+            <label>
+                TÍTULO
+            </label>
+
+            <input
+                id="title"
+                required
+            >
+
+            <label>
+                CATEGORIA
+            </label>
+
+            <input
+                id="category"
+                value="COLEÇÃO ESPECIAL"
+                required
+            >
+
+            <label>
+                DESCRIÇÃO
+            </label>
+
+            <textarea
+                id="description"
+            ></textarea>
+
+            <label>
+                FOTOGRAFIA
+            </label>
+
+            <input
+                id="image"
+                type="file"
+                accept="image/*"
+            >
+
+            <img
+                id="preview"
+                class="preview"
+            >
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="closeModal()"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Guardar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TOAST
+========================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+/* =========================
+   API
+========================= */
+
+const API = window.location.origin;
+
+let token = null;
+let editing = null;
+
+const $ = id => document.getElementById(id);
+
+
+/* =========================
+   MOSTRAR APLICAÇÃO
+========================= */
+
+function showApp(){
+
+    $("login").style.display = "none";
+    $("app").style.display = "block";
+
+    load();
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+$("loginForm").onsubmit = async e => {
+
+    e.preventDefault();
+
+    $("loginErr").style.display = "none";
+
+    const username = $("username").value.trim();
+    const senha = $("password").value;
+
+    const f = new FormData();
+
+    f.append("username", username);
+    f.append("senha", senha);
+
+    try {
+
+        const r = await fetch(
+            API + "/api/login",
+            {
+                method: "POST",
+                body: f
+            }
+        );
+
+        const texto = await r.text();
+
+        console.log("STATUS:", r.status);
+        console.log("RESPOSTA DO SERVIDOR:", texto);
+
+        if (!r.ok) {
+
+            throw new Error(
+                "Servidor respondeu " +
+                r.status +
+                ": " +
+                texto.substring(0, 200)
+            );
+
+        }
+
+        let d;
+
+        try {
+
+            d = JSON.parse(texto);
+
+        } catch {
+
+            throw new Error(
+                "O servidor não devolveu JSON. " +
+                "Resposta: " +
+                texto.substring(0, 200)
+            );
+
+        }
+
+        if (!d.access_token) {
+
+            throw new Error(
+                "O servidor não enviou access_token."
+            );
+
+        }
+
+        token = d.access_token;
+
+        localStorage.setItem(
+            "museuAdminToken",
+            token
+        );
+
+        showApp();
+
+    }
+    catch(error) {
+
+        console.error(
+            "ERRO COMPLETO:",
+            error
+        );
+
+        $("loginErr").textContent =
+            error.message;
+
+        $("loginErr").style.display =
+            "block";
+
+    }
+
+};
+
+/* =========================
+   CARREGAR OBRAS
+========================= */
+
+async function load(){
+
+    try{
+
+        const r = await fetch(
+            API + "/api/obras"
+        );
+
+        if(!r.ok){
+            throw new Error();
+        }
+
+        const d =
+            await r.json();
+
+        const obras =
+            d.obras || [];
+
+        $("count").textContent =
+            obras.length +
+            " fotografia" +
+            (
+                obras.length === 1
+                ? ""
+                : "s"
+            ) +
+            " na coleção";
+
+        $("grid").innerHTML =
+            obras.length
+            ?
+            obras.map(o => `
+
+                <article class="card">
+
+                    <img
+                        src="${API}${o.imagem}"
+                        alt="${esc(o.titulo)}"
+                    >
+
+                    <div class="info">
+
+                        <h3>
+                            ${esc(o.titulo)}
+                        </h3>
+
+                        <p>
+                            ${esc(o.categoria)}
+                        </p>
+
+                        <div class="actions">
+
+                            <button
+                                onclick="edit(${o.id})"
+                            >
+                                ✎ Editar
+                            </button>
+
+                            <button
+                                class="del"
+                                onclick="del(${o.id})"
+                            >
+                                🗑 Apagar
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            `).join("")
+
+            :
+
+            `
+                <div
+                    style="
+                        grid-column:1/-1;
+                        text-align:center;
+                        padding:80px;
+                        border:1px dashed #ffffff22;
+                    "
+                >
+                    O museu está vazio.
+                </div>
+            `;
+
+    }
+    catch(error){
+
+        console.error(
+            "Erro ao carregar obras:",
+            error
+        );
+
+        $("grid").innerHTML = `
+
+            <div
+                style="
+                    grid-column:1/-1;
+                    text-align:center;
+                    padding:80px;
+                "
+            >
+                Servidor indisponível.
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================
+   NOVA OBRA
+========================= */
+
+function newWork(){
+
+    editing = null;
+
+    $("modalTitle").textContent =
+        "Nova fotografia";
+
+    $("workForm").reset();
+
+    $("category").value =
+        "COLEÇÃO ESPECIAL";
+
+    $("preview").style.display =
+        "none";
+
+    $("preview").src = "";
+
+    $("modal").classList.add("on");
+
+}
+
+
+/* =========================
+   EDITAR
+========================= */
+
+async function edit(id){
+
+    try{
+
+        const r =
+            await fetch(
+                API + "/api/obras"
+            );
+
+        const d =
+            await r.json();
+
+        editing =
+            d.obras.find(
+                o => o.id === id
+            );
+
+        if(!editing){
+            return;
+        }
+
+        $("modalTitle").textContent =
+            "Editar fotografia";
+
+        $("title").value =
+            editing.titulo;
+
+        $("category").value =
+            editing.categoria;
+
+        $("description").value =
+            editing.descricao || "";
+
+        $("image").value = "";
+
+        $("preview").src =
+            API + editing.imagem;
+
+        $("preview").style.display =
+            "block";
+
+        $("modal").classList.add("on");
+
+    }
+    catch(error){
+
+        toast(
+            "Não foi possível abrir a fotografia."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   GUARDAR
+========================= */
+
+$("workForm").onsubmit =
+async e => {
+
+    e.preventDefault();
+
+    const f =
+        new FormData();
+
+    f.append(
+        "titulo",
+        $("title").value
+    );
+
+    f.append(
+        "categoria",
+        $("category").value
+    );
+
+    f.append(
+        "descricao",
+        $("description").value
+    );
+
+    const file =
+        $("image").files[0];
+
+    if(!editing && !file){
+
+        return toast(
+            "Escolhe uma fotografia."
+        );
+
+    }
+
+    if(file){
+
+        f.append(
+            "imagem",
+            file
+        );
+
+    }
+
+    const url =
+        editing
+        ?
+        API + "/api/obras/" + editing.id
+        :
+        API + "/api/obras";
+
+    const method =
+        editing
+        ? "PUT"
+        : "POST";
+
+    try{
+
+        const r =
+            await fetch(
+                url,
+                {
+                    method:method,
+
+                    headers:{
+                        Authorization:
+                            "Bearer " + token
+                    },
+
+                    body:f
+                }
+            );
+
+        if(r.status === 401){
+
+            return logout();
+
+        }
+
+        if(!r.ok){
+
+            const erro =
+                await r.json()
+                    .catch(() => ({}));
+
+            throw new Error(
+                erro.detail ||
+                "Erro ao guardar."
+            );
+
+        }
+
+        const eraEdicao =
+            !!editing;
+
+        closeModal();
+
+        toast(
+            eraEdicao
+            ? "Fotografia atualizada."
+            : "Fotografia adicionada."
+        );
+
+        load();
+
+    }
+    catch(error){
+
+        console.error(
+            "Erro ao guardar:",
+            error
+        );
+
+        toast(
+            error.message ||
+            "Não foi possível guardar."
+        );
+
+    }
+
+};
+
+
+/* =========================
+   APAGAR
+========================= */
+
+async function del(id){
+
+    if(
+        !confirm(
+            "Apagar esta fotografia do museu?"
+        )
+    ){
+        return;
+    }
+
+    try{
+
+        const r =
+            await fetch(
+
+                API +
+                "/api/obras/" +
+                id,
+
+                {
+                    method:"DELETE",
+
+                    headers:{
+                        Authorization:
+                            "Bearer " + token
+                    }
+                }
+
+            );
+
+        if(r.status === 401){
+
+            return logout();
+
+        }
+
+        if(!r.ok){
+
+            throw new Error();
+
+        }
+
+        toast(
+            "Fotografia apagada."
+        );
+
+        load();
+
+    }
+    catch(error){
+
+        toast(
+            "Não foi possível apagar."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   FECHAR MODAL
+========================= */
+
+function closeModal(){
+
+    $("modal").classList.remove(
+        "on"
+    );
+
+    editing = null;
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+    localStorage.removeItem(
+        "museuAdminToken"
+    );
+
+    token = null;
+
+    $("app").style.display =
+        "none";
+
+    $("login").style.display =
+        "flex";
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+function toast(t){
+
+    $("toast").textContent =
+        t;
+
+    $("toast").style.display =
+        "block";
+
+    setTimeout(
+        () => {
+
+            $("toast").style.display =
+                "none";
+
+        },
+        2500
+    );
+
+}
+
+
+/* =========================
+   ESCAPAR HTML
+========================= */
+
+function esc(s){
+
+    return String(
+        s ?? ""
+    ).replace(
+        /[&<>"']/g,
+        c => ({
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+        }[c])
+    );
+
+}
+
+
+/* =========================
+   PREVIEW DA IMAGEM
+========================= */
+
+$("image").onchange = () => {
+
+    const f =
+        $("image").files[0];
+
+    if(f){
+
+        $("preview").src =
+            URL.createObjectURL(f);
+
+        $("preview").style.display =
+            "block";
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
